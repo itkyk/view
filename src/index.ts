@@ -92,7 +92,7 @@ class Base {
 
 }
 
-class Page extends Base {
+export class Page extends Base {
   constructor(_tag: string, num = null) {
     super(_tag)
     this.tag = _tag
@@ -100,14 +100,14 @@ class Page extends Base {
   }
 }
 
-class Component extends Base{
+export class Component extends Base{
   constructor(props: any) {
     super(props.tag);
     this.section = props.component;
   }
 }
 
-function createComponent(_tagName: string, _class: any = Component) {
+export function createComponent(_tagName: string, _class: any) {
   const targets = document.querySelectorAll(_tagName);
   const refactorTag = _tagName.replace("#","").replace(".","")
   const classes = [];
@@ -122,4 +122,3 @@ function createComponent(_tagName: string, _class: any = Component) {
   }
   return classes;
 }
-export default {Page, Component, createComponent}
