@@ -4,6 +4,7 @@ class Base {
   private readonly watchFuncs: Record<string, ()=>void>;
   public section: HTMLElement | null | undefined;
   public watch: (() => object) | undefined;
+  public style: any;
   constructor(_tag:string) {
     this.tag = _tag;
     this.refs = {}
@@ -14,6 +15,7 @@ class Base {
       this._addEvents()
       this.getReference()
       this.setWatch()
+      this.setEmotion();
       if (cb) {
         cb();
       }
@@ -23,6 +25,25 @@ class Base {
     if (this.watch !== undefined) {
       const callback = this.watch()
       this.startWatcher(callback)
+    }
+  }
+
+
+  setEmotion = () => {
+    let style = null;
+    if (this.style) {
+      style = this.style();
+    }
+    if (style) {
+      const selector = `[${this.tag}-css]`
+      const styleTargets = this.section?.querySelectorAll(selector);
+      if (styleTargets) {
+        for (const target of styleTargets) {
+          const selector = target.getAttribute(`${this.tag}-css`);
+          // @ts-ignore
+          target.classList.add(style[selector]);
+        }
+      }
     }
   }
 

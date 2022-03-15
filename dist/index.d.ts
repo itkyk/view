@@ -4,9 +4,11 @@ declare class Base {
     private readonly watchFuncs;
     section: HTMLElement | null | undefined;
     watch: (() => object) | undefined;
+    style: any;
     constructor(_tag: string);
     init(cb: () => void | null): void;
     setWatch(): void;
+    setEmotion: () => void;
     startWatcher: (keys: any) => void;
     removeWatch(): void;
     _addEvents: () => void;
