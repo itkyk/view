@@ -3,6 +3,24 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.createComponent = exports.Component = exports.Page = void 0;
 class Base {
     constructor(_tag) {
+        this.setEmotion = () => {
+            var _a;
+            let style = null;
+            if (this.style) {
+                style = this.style();
+            }
+            if (style) {
+                const selector = `[${this.tag}-css]`;
+                const styleTargets = (_a = this.section) === null || _a === void 0 ? void 0 : _a.querySelectorAll(selector);
+                if (styleTargets) {
+                    for (const target of styleTargets) {
+                        const selector = target.getAttribute(`${this.tag}-css`);
+                        // @ts-ignore
+                        target.classList.add(style[selector]);
+                    }
+                }
+            }
+        };
         this.startWatcher = (keys) => {
             Object.keys(keys).forEach((key) => {
                 // @ts-ignore
@@ -47,6 +65,7 @@ class Base {
             this._addEvents();
             this.getReference();
             this.setWatch();
+            this.setEmotion();
             if (cb) {
                 cb();
             }
