@@ -1,6 +1,6 @@
 class Base {
   public tag: string;
-  public refs: Record<string, HTMLElement | Element >
+  public refs: Record<string, HTMLElement >
   private readonly watchFuncs: Record<string, ()=>void>;
   public section: HTMLElement | null | undefined;
   public watch: (() => object) | undefined;
@@ -93,7 +93,7 @@ class Base {
   getReference() {
     const tag = `${this.tag}-ref`
     if (this.section) {
-      const refs = this.section.querySelectorAll(`[${tag}]`);
+      const refs = this.section.querySelectorAll(`[${tag}]`) as NodeListOf<HTMLElement>;
       for (const ref of refs) {
         const attribute = ref.getAttribute(tag);
         if (attribute) {

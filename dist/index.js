@@ -14,26 +14,47 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __values = (this && this.__values) || function(o) {
+    var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
+    if (m) return m.call(o);
+    if (o && typeof o.length === "number") return {
+        next: function () {
+            if (o && i >= o.length) o = void 0;
+            return { value: o && o[i++], done: !o };
+        }
+    };
+    throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createComponent = exports.Component = exports.Page = void 0;
 var Base = /** @class */ (function () {
     function Base(_tag) {
         var _this = this;
         this.setEmotion = function () {
-            var _a;
+            var e_1, _a;
+            var _b;
             var style = null;
             if (_this.style) {
                 style = _this.style();
             }
             if (style) {
                 var selector = "[".concat(_this.tag, "-css]");
-                var styleTargets = (_a = _this.section) === null || _a === void 0 ? void 0 : _a.querySelectorAll(selector);
+                var styleTargets = (_b = _this.section) === null || _b === void 0 ? void 0 : _b.querySelectorAll(selector);
                 if (styleTargets) {
-                    for (var _i = 0, styleTargets_1 = styleTargets; _i < styleTargets_1.length; _i++) {
-                        var target = styleTargets_1[_i];
-                        var selector_1 = target.getAttribute("".concat(_this.tag, "-css"));
-                        // @ts-ignore
-                        target.classList.add(style[selector_1]);
+                    try {
+                        for (var styleTargets_1 = __values(styleTargets), styleTargets_1_1 = styleTargets_1.next(); !styleTargets_1_1.done; styleTargets_1_1 = styleTargets_1.next()) {
+                            var target = styleTargets_1_1.value;
+                            var selector_1 = target.getAttribute("".concat(_this.tag, "-css"));
+                            // @ts-ignore
+                            target.classList.add(style[selector_1]);
+                        }
+                    }
+                    catch (e_1_1) { e_1 = { error: e_1_1 }; }
+                    finally {
+                        try {
+                            if (styleTargets_1_1 && !styleTargets_1_1.done && (_a = styleTargets_1.return)) _a.call(styleTargets_1);
+                        }
+                        finally { if (e_1) throw e_1.error; }
                     }
                 }
             }
@@ -55,27 +76,46 @@ var Base = /** @class */ (function () {
             });
         };
         this._addEvents = function () {
+            var e_2, _a, e_3, _b;
             var events = ["click", "scroll", "load", "mouseenter", "mouseleave", "mouseover", "change"];
-            for (var _i = 0, events_1 = events; _i < events_1.length; _i++) {
-                var event_1 = events_1[_i];
-                var eventName = "".concat(_this.tag, "-").concat(event_1);
-                if (_this.section !== undefined && _this.section !== null) {
-                    var targets = _this.section.querySelectorAll("[" + eventName + "]");
-                    var _loop_1 = function (target) {
-                        var func = target.getAttribute(eventName);
-                        var addFunc = function (e) {
-                            if (func !== null) {
-                                // @ts-ignore
-                                _this[func](e);
-                            }
+            try {
+                for (var events_1 = __values(events), events_1_1 = events_1.next(); !events_1_1.done; events_1_1 = events_1.next()) {
+                    var event_1 = events_1_1.value;
+                    var eventName = "".concat(_this.tag, "-").concat(event_1);
+                    if (_this.section !== undefined && _this.section !== null) {
+                        var targets = _this.section.querySelectorAll("[" + eventName + "]");
+                        var _loop_1 = function (target) {
+                            var func = target.getAttribute(eventName);
+                            var addFunc = function (e) {
+                                if (func !== null) {
+                                    // @ts-ignore
+                                    _this[func](e);
+                                }
+                            };
+                            target.addEventListener(event_1, addFunc);
                         };
-                        target.addEventListener(event_1, addFunc);
-                    };
-                    for (var _a = 0, targets_1 = targets; _a < targets_1.length; _a++) {
-                        var target = targets_1[_a];
-                        _loop_1(target);
+                        try {
+                            for (var targets_1 = (e_3 = void 0, __values(targets)), targets_1_1 = targets_1.next(); !targets_1_1.done; targets_1_1 = targets_1.next()) {
+                                var target = targets_1_1.value;
+                                _loop_1(target);
+                            }
+                        }
+                        catch (e_3_1) { e_3 = { error: e_3_1 }; }
+                        finally {
+                            try {
+                                if (targets_1_1 && !targets_1_1.done && (_b = targets_1.return)) _b.call(targets_1);
+                            }
+                            finally { if (e_3) throw e_3.error; }
+                        }
                     }
                 }
+            }
+            catch (e_2_1) { e_2 = { error: e_2_1 }; }
+            finally {
+                try {
+                    if (events_1_1 && !events_1_1.done && (_a = events_1.return)) _a.call(events_1);
+                }
+                finally { if (e_2) throw e_2.error; }
             }
         };
         this.tag = _tag;
@@ -107,15 +147,25 @@ var Base = /** @class */ (function () {
         });
     };
     Base.prototype.getReference = function () {
+        var e_4, _a;
         var tag = "".concat(this.tag, "-ref");
         if (this.section) {
             var refs = this.section.querySelectorAll("[".concat(tag, "]"));
-            for (var _i = 0, refs_1 = refs; _i < refs_1.length; _i++) {
-                var ref = refs_1[_i];
-                var attribute = ref.getAttribute(tag);
-                if (attribute) {
-                    this.refs[attribute] = ref;
+            try {
+                for (var refs_1 = __values(refs), refs_1_1 = refs_1.next(); !refs_1_1.done; refs_1_1 = refs_1.next()) {
+                    var ref = refs_1_1.value;
+                    var attribute = ref.getAttribute(tag);
+                    if (attribute) {
+                        this.refs[attribute] = ref;
+                    }
                 }
+            }
+            catch (e_4_1) { e_4 = { error: e_4_1 }; }
+            finally {
+                try {
+                    if (refs_1_1 && !refs_1_1.done && (_a = refs_1.return)) _a.call(refs_1);
+                }
+                finally { if (e_4) throw e_4.error; }
             }
         }
     };
@@ -151,19 +201,38 @@ var Component = /** @class */ (function (_super) {
 }(Base));
 exports.Component = Component;
 function createComponent(_tagName, _class) {
+    var e_5, _a, e_6, _b;
     var targets = document.querySelectorAll(_tagName);
     var refactorTag = _tagName.replace("#", "").replace(".", "");
     var classes = [];
     if (_tagName.includes("#")) {
-        for (var _i = 0, targets_2 = targets; _i < targets_2.length; _i++) {
-            var target = targets_2[_i];
-            classes.push(new _class(refactorTag));
+        try {
+            for (var targets_2 = __values(targets), targets_2_1 = targets_2.next(); !targets_2_1.done; targets_2_1 = targets_2.next()) {
+                var target = targets_2_1.value;
+                classes.push(new _class(refactorTag));
+            }
+        }
+        catch (e_5_1) { e_5 = { error: e_5_1 }; }
+        finally {
+            try {
+                if (targets_2_1 && !targets_2_1.done && (_a = targets_2.return)) _a.call(targets_2);
+            }
+            finally { if (e_5) throw e_5.error; }
         }
     }
     else if (_tagName.includes(".")) {
-        for (var _a = 0, targets_3 = targets; _a < targets_3.length; _a++) {
-            var target = targets_3[_a];
-            classes.push(new _class({ component: target, tag: refactorTag }));
+        try {
+            for (var targets_3 = __values(targets), targets_3_1 = targets_3.next(); !targets_3_1.done; targets_3_1 = targets_3.next()) {
+                var target = targets_3_1.value;
+                classes.push(new _class({ component: target, tag: refactorTag }));
+            }
+        }
+        catch (e_6_1) { e_6 = { error: e_6_1 }; }
+        finally {
+            try {
+                if (targets_3_1 && !targets_3_1.done && (_b = targets_3.return)) _b.call(targets_3);
+            }
+            finally { if (e_6) throw e_6.error; }
         }
     }
     return classes;

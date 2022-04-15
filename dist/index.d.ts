@@ -1,6 +1,6 @@
 declare class Base {
     tag: string;
-    refs: Record<string, HTMLElement | Element>;
+    refs: Record<string, HTMLElement>;
     private readonly watchFuncs;
     section: HTMLElement | null | undefined;
     watch: (() => object) | undefined;
