@@ -1,4 +1,4 @@
-let emits: Record<string, unknown> = {};
+let emits: Record<string, ()=>unknown> = {};
 
 class Base {
   public tag: string;
@@ -7,7 +7,7 @@ class Base {
   public section: HTMLElement | null | undefined;
   public watch: (() => object) | undefined;
   public style: any;
-  public emit: undefined | (()=>Record<string, unknown>);
+  public emit: undefined | (()=>Record<string, ()=>unknown>);
   constructor(_tag:string) {
     this.tag = _tag;
     this.refs = {}
@@ -115,9 +115,13 @@ class Base {
    }
   }
 
+  private getEmit = (name: string) => {
+    return emits[name];
+  }
+
   view = () => {
     return {
-      emit: emits
+      emit: this.getEmit
     }
   }
 

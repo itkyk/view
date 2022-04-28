@@ -125,9 +125,12 @@ var Base = /** @class */ (function () {
                 emits = Object.assign(emits, emit);
             }
         };
+        this.getEmit = function (name) {
+            return emits[name];
+        };
         this.view = function () {
             return {
-                emit: emits
+                emit: _this.getEmit
             };
         };
         this.tag = _tag;
