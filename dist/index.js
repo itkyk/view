@@ -27,6 +27,7 @@ var __values = (this && this.__values) || function(o) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createComponent = exports.Component = exports.Page = void 0;
+var emits = {};
 var Base = /** @class */ (function () {
     function Base(_tag) {
         var _this = this;
@@ -75,7 +76,7 @@ var Base = /** @class */ (function () {
                 _this.watchFuncs[key]();
             });
         };
-        this._addEvents = function () {
+        this.addEvents = function () {
             var e_2, _a, e_3, _b;
             var events = ["click", "scroll", "load", "mouseenter", "mouseleave", "mouseover", "change"];
             try {
@@ -118,13 +119,25 @@ var Base = /** @class */ (function () {
                 finally { if (e_2) throw e_2.error; }
             }
         };
+        this.setEmit = function () {
+            if (_this.emit !== undefined && typeof _this.emit !== "undefined") {
+                var emit = _this.emit();
+                emits = Object.assign(emits, emit);
+            }
+        };
+        this.view = function () {
+            return {
+                emit: emits
+            };
+        };
         this.tag = _tag;
         this.refs = {};
         this.watchFuncs = {};
     }
     Base.prototype.init = function (cb) {
         if (this.section) {
-            this._addEvents();
+            this.setEmit();
+            this.addEvents();
             this.getReference();
             this.setWatch();
             this.setEmotion();

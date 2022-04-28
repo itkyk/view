@@ -5,14 +5,19 @@ declare class Base {
     section: HTMLElement | null | undefined;
     watch: (() => object) | undefined;
     style: any;
+    emit: undefined | (() => Record<string, unknown>);
     constructor(_tag: string);
     init(cb: () => void | null): void;
-    setWatch(): void;
-    setEmotion: () => void;
-    startWatcher: (keys: any) => void;
+    private setWatch;
+    private setEmotion;
+    private startWatcher;
     removeWatch(): void;
-    _addEvents: () => void;
-    getReference(): void;
+    private addEvents;
+    private getReference;
+    private setEmit;
+    view: () => {
+        emit: Record<string, unknown>;
+    };
     destroy(): void;
 }
 export declare class Page extends Base {
