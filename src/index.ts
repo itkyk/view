@@ -1,3 +1,5 @@
+let emits: Record<string, ()=>unknown> = {};
+
 class Base {
   public tag: string;
   public refs: Record<string, HTMLElement >
@@ -5,6 +7,7 @@ class Base {
   public section: HTMLElement | null | undefined;
   public watch: (() => object) | undefined;
   public style: any;
+  public emit: undefined | (()=>Record<string, ()=>unknown>);
   constructor(_tag:string) {
     this.tag = _tag;
     this.refs = {}
@@ -12,7 +15,8 @@ class Base {
   }
   init(cb: ()=>void | null) {
     if (this.section) {
-      this._addEvents()
+      this.setEmit();
+      this.addEvents()
       this.getReference()
       this.setWatch()
       this.setEmotion();
@@ -21,7 +25,8 @@ class Base {
       }
     }
   }
-  setWatch() {
+
+  private setWatch() {
     if (this.watch !== undefined) {
       const callback = this.watch()
       this.startWatcher(callback)
@@ -29,7 +34,7 @@ class Base {
   }
 
 
-  setEmotion = () => {
+  private setEmotion = () => {
     let style = null;
     if (this.style) {
       style = this.style();
@@ -47,7 +52,7 @@ class Base {
     }
   }
 
-  startWatcher = (keys: any) => {
+  private startWatcher = (keys: any) => {
     Object.keys(keys).forEach( (key) => {
       // @ts-ignore
       let lastVal = this[key]
@@ -71,7 +76,7 @@ class Base {
     })
   }
 
-  _addEvents = () =>{
+  private addEvents = () =>{
     const events = ["click", "scroll", "load", "mouseenter", "mouseleave", "mouseover", "change"]
     for (const event of events) {
       const eventName = `${this.tag}-${event}`
@@ -90,7 +95,7 @@ class Base {
       }
     }
   }
-  getReference() {
+  private getReference() {
     const tag = `${this.tag}-ref`
     if (this.section) {
       const refs = this.section.querySelectorAll(`[${tag}]`) as NodeListOf<HTMLElement>;
@@ -102,6 +107,24 @@ class Base {
       }
     }
   }
+
+  private setEmit = () => {
+   if (this.emit !== undefined && typeof this.emit !== "undefined") {
+      const emit = this.emit();
+      emits = Object.assign(emits, emit);
+   }
+  }
+
+  private getEmit = (name: string) => {
+    return emits[name];
+  }
+
+  view = () => {
+    return {
+      emit: this.getEmit
+    }
+  }
+
   destroy(){
     // @ts-ignore
     if (this.beforeDestroy) {
