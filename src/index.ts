@@ -146,10 +146,12 @@ export class Component extends Base{
 }
 
 export function createComponent(_tagName: string, _class: any) {
+  let targets:NodeListOf<Element>;
   if (!_tagName.includes("#") && !_tagName.includes(".")) {
-    _tagName = refactorDataTag(_tagName);
+    targets = document.querySelectorAll(refactorDataTag(_tagName))
+  } else {
+    targets = document.querySelectorAll(_tagName);
   }
-  const targets = document.querySelectorAll(_tagName);
   const refactorTag = _tagName.replace("#","").replace(".","")
   const classes = [];
   for (const target of targets) {

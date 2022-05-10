@@ -206,10 +206,13 @@ var Component = /** @class */ (function (_super) {
 exports.Component = Component;
 function createComponent(_tagName, _class) {
     var e_5, _a;
+    var targets;
     if (!_tagName.includes("#") && !_tagName.includes(".")) {
-        _tagName = refactorDataTag(_tagName);
+        targets = document.querySelectorAll(refactorDataTag(_tagName));
     }
-    var targets = document.querySelectorAll(_tagName);
+    else {
+        targets = document.querySelectorAll(_tagName);
+    }
     var refactorTag = _tagName.replace("#", "").replace(".", "");
     var classes = [];
     try {
