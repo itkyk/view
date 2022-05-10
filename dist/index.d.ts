@@ -6,7 +6,7 @@ declare class Base {
     watch: (() => object) | undefined;
     style: any;
     emit: undefined | (() => Record<string, () => unknown>);
-    constructor(_tag: string);
+    constructor(_tag: string, _section: HTMLElement);
     init(cb: () => void | null): void;
     private setWatch;
     private setEmotion;
@@ -20,9 +20,6 @@ declare class Base {
         emit: (name: string) => () => unknown;
     };
     destroy(): void;
-}
-export declare class Page extends Base {
-    constructor(_tag: string, num?: null);
 }
 export declare class Component extends Base {
     constructor(props: any);

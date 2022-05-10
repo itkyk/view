@@ -26,10 +26,11 @@ var __values = (this && this.__values) || function(o) {
     throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createComponent = exports.Component = exports.Page = void 0;
+exports.createComponent = exports.Component = void 0;
 var emits = {};
+var refactorDataTag = function (_tagName) { return "[data-view=\"".concat(_tagName, "\"]"); };
 var Base = /** @class */ (function () {
-    function Base(_tag) {
+    function Base(_tag, _section) {
         var _this = this;
         this.setEmotion = function () {
             var e_1, _a;
@@ -39,7 +40,7 @@ var Base = /** @class */ (function () {
                 style = _this.style();
             }
             if (style) {
-                var selector = "[".concat(_this.tag, "-css]");
+                var selector = "[data-".concat(_this.tag, "-css]");
                 var styleTargets = (_b = _this.section) === null || _b === void 0 ? void 0 : _b.querySelectorAll(selector);
                 if (styleTargets) {
                     try {
@@ -82,7 +83,7 @@ var Base = /** @class */ (function () {
             try {
                 for (var events_1 = __values(events), events_1_1 = events_1.next(); !events_1_1.done; events_1_1 = events_1.next()) {
                     var event_1 = events_1_1.value;
-                    var eventName = "".concat(_this.tag, "-").concat(event_1);
+                    var eventName = "data-".concat(_this.tag, "-").concat(event_1);
                     if (_this.section !== undefined && _this.section !== null) {
                         var targets = _this.section.querySelectorAll("[" + eventName + "]");
                         var _loop_1 = function (target) {
@@ -133,6 +134,7 @@ var Base = /** @class */ (function () {
                 emit: _this.getEmit
             };
         };
+        this.section = _section;
         this.tag = _tag;
         this.refs = {};
         this.watchFuncs = {};
@@ -164,7 +166,7 @@ var Base = /** @class */ (function () {
     };
     Base.prototype.getReference = function () {
         var e_4, _a;
-        var tag = "".concat(this.tag, "-ref");
+        var tag = "data-".concat(this.tag, "-ref");
         if (this.section) {
             var refs = this.section.querySelectorAll("[".concat(tag, "]"));
             try {
@@ -194,62 +196,34 @@ var Base = /** @class */ (function () {
     };
     return Base;
 }());
-var Page = /** @class */ (function (_super) {
-    __extends(Page, _super);
-    function Page(_tag, num) {
-        if (num === void 0) { num = null; }
-        var _this = _super.call(this, _tag) || this;
-        _this.tag = _tag;
-        _this.section = document.getElementById(_tag);
-        return _this;
-    }
-    return Page;
-}(Base));
-exports.Page = Page;
 var Component = /** @class */ (function (_super) {
     __extends(Component, _super);
     function Component(props) {
-        var _this = _super.call(this, props.tag) || this;
-        _this.section = props.component;
-        return _this;
+        return _super.call(this, props.tag, props.component) || this;
     }
     return Component;
 }(Base));
 exports.Component = Component;
 function createComponent(_tagName, _class) {
-    var e_5, _a, e_6, _b;
+    var e_5, _a;
+    if (!_tagName.includes("#") && !_tagName.includes(".")) {
+        _tagName = refactorDataTag(_tagName);
+    }
     var targets = document.querySelectorAll(_tagName);
     var refactorTag = _tagName.replace("#", "").replace(".", "");
     var classes = [];
-    if (_tagName.includes("#")) {
-        try {
-            for (var targets_2 = __values(targets), targets_2_1 = targets_2.next(); !targets_2_1.done; targets_2_1 = targets_2.next()) {
-                var target = targets_2_1.value;
-                classes.push(new _class(refactorTag));
-            }
-        }
-        catch (e_5_1) { e_5 = { error: e_5_1 }; }
-        finally {
-            try {
-                if (targets_2_1 && !targets_2_1.done && (_a = targets_2.return)) _a.call(targets_2);
-            }
-            finally { if (e_5) throw e_5.error; }
+    try {
+        for (var targets_2 = __values(targets), targets_2_1 = targets_2.next(); !targets_2_1.done; targets_2_1 = targets_2.next()) {
+            var target = targets_2_1.value;
+            classes.push(new _class({ component: target, tag: refactorTag, isData: _tagName.includes("data-view") ? true : false }));
         }
     }
-    else if (_tagName.includes(".")) {
+    catch (e_5_1) { e_5 = { error: e_5_1 }; }
+    finally {
         try {
-            for (var targets_3 = __values(targets), targets_3_1 = targets_3.next(); !targets_3_1.done; targets_3_1 = targets_3.next()) {
-                var target = targets_3_1.value;
-                classes.push(new _class({ component: target, tag: refactorTag }));
-            }
+            if (targets_2_1 && !targets_2_1.done && (_a = targets_2.return)) _a.call(targets_2);
         }
-        catch (e_6_1) { e_6 = { error: e_6_1 }; }
-        finally {
-            try {
-                if (targets_3_1 && !targets_3_1.done && (_b = targets_3.return)) _b.call(targets_3);
-            }
-            finally { if (e_6) throw e_6.error; }
-        }
+        finally { if (e_5) throw e_5.error; }
     }
     return classes;
 }

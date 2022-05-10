@@ -1,5 +1,7 @@
 let emits: Record<string, ()=>unknown> = {};
 
+const refactorDataTag = (_tagName:string) => `[data-view="${_tagName}"]`;
+
 class Base {
   public tag: string;
   public refs: Record<string, HTMLElement >
@@ -8,7 +10,8 @@ class Base {
   public watch: (() => object) | undefined;
   public style: any;
   public emit: undefined | (()=>Record<string, ()=>unknown>);
-  constructor(_tag:string) {
+  constructor(_tag:string, _section: HTMLElement) {
+    this.section = _section;
     this.tag = _tag;
     this.refs = {}
     this.watchFuncs = {}
@@ -40,7 +43,7 @@ class Base {
       style = this.style();
     }
     if (style) {
-      const selector = `[${this.tag}-css]`
+      const selector = `[data-${this.tag}-css]`
       const styleTargets = this.section?.querySelectorAll(selector);
       if (styleTargets) {
         for (const target of styleTargets) {
@@ -79,7 +82,7 @@ class Base {
   private addEvents = () =>{
     const events = ["click", "scroll", "load", "mouseenter", "mouseleave", "mouseover", "change"]
     for (const event of events) {
-      const eventName = `${this.tag}-${event}`
+      const eventName = `data-${this.tag}-${event}`
       if (this.section !== undefined && this.section !== null) {
         const targets = this.section.querySelectorAll("[" + eventName + "]");
         for (const target of targets) {
@@ -96,7 +99,7 @@ class Base {
     }
   }
   private getReference() {
-    const tag = `${this.tag}-ref`
+    const tag = `data-${this.tag}-ref`
     if (this.section) {
       const refs = this.section.querySelectorAll(`[${tag}]`) as NodeListOf<HTMLElement>;
       for (const ref of refs) {
@@ -136,33 +139,21 @@ class Base {
 
 }
 
-export class Page extends Base {
-  constructor(_tag: string, num = null) {
-    super(_tag)
-    this.tag = _tag
-    this.section = document.getElementById(_tag);
-  }
-}
-
 export class Component extends Base{
   constructor(props: any) {
-    super(props.tag);
-    this.section = props.component;
+    super(props.tag, props.component);
   }
 }
 
 export function createComponent(_tagName: string, _class: any) {
+  if (!_tagName.includes("#") && !_tagName.includes(".")) {
+    _tagName = refactorDataTag(_tagName);
+  }
   const targets = document.querySelectorAll(_tagName);
   const refactorTag = _tagName.replace("#","").replace(".","")
   const classes = [];
-  if (_tagName.includes("#")) {
-    for (const target of targets) {
-      classes.push(new _class(refactorTag))
-    }
-  } else if (_tagName.includes(".")) {
-    for (const target of targets) {
-      classes.push(new _class({component: target, tag:refactorTag}))
-    }
+  for (const target of targets) {
+    classes.push(new _class({component: target, tag:refactorTag, isData: _tagName.includes("data-view") ? true : false}));
   }
   return classes;
 }
