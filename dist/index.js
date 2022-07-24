@@ -46,9 +46,9 @@ var Base = /** @class */ (function () {
                     try {
                         for (var styleTargets_1 = __values(styleTargets), styleTargets_1_1 = styleTargets_1.next(); !styleTargets_1_1.done; styleTargets_1_1 = styleTargets_1.next()) {
                             var target = styleTargets_1_1.value;
-                            var selector_1 = target.getAttribute("".concat(_this.tag, "-css"));
+                            var className = target.getAttribute("data-".concat(_this.tag, "-css"));
                             // @ts-ignore
-                            target.classList.add(style[selector_1]);
+                            target.classList.add(style[className]);
                         }
                     }
                     catch (e_1_1) { e_1 = { error: e_1_1 }; }

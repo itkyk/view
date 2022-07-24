@@ -47,9 +47,9 @@ class Base {
       const styleTargets = this.section?.querySelectorAll(selector);
       if (styleTargets) {
         for (const target of styleTargets) {
-          const selector = target.getAttribute(`${this.tag}-css`);
+          const className = target.getAttribute(`data-${this.tag}-css`);
           // @ts-ignore
-          target.classList.add(style[selector]);
+          target.classList.add(style[className]);
         }
       }
     }
